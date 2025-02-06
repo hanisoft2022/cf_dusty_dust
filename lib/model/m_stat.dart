@@ -59,8 +59,6 @@ enum Region {
         return '경남';
       case Region.gyeonggi:
         return '경기';
-      default:
-        throw Exception('존재하지 않는 지역입니다.');
     }
   }
 }
