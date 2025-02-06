@@ -12,7 +12,6 @@ final List<String> skipKeys = [
 class StatRepository {
   static Future<void> fetchData() async {
     final isar = GetIt.I<Isar>();
-
     final now = DateTime.now();
     final compareDateTimeTarget = DateTime(now.year, now.month, now.day, now.hour);
 
@@ -50,8 +49,7 @@ class StatRepository {
     if (rawData is! List) {
       throw Exception('Unexpected data format: items is not a List');
     }
-    final List<Map<String, dynamic>> rawItemList =
-        rawData.whereType<Map<String, dynamic>>().cast<Map<String, dynamic>>().toList();
+    final List<Map<String, dynamic>> rawItemList = rawData.whereType<Map<String, dynamic>>().cast<Map<String, dynamic>>().toList();
 
     // List<MStat> listOfMStat = [];
 
@@ -78,12 +76,7 @@ class StatRepository {
 
         final isar = GetIt.I<Isar>();
 
-        final count = await isar.mStats
-            .filter()
-            .regionEqualTo(region)
-            .dateTimeEqualTo(dateTime)
-            .itemCodeEqualTo(itemCode)
-            .count();
+        final count = await isar.mStats.filter().regionEqualTo(region).dateTimeEqualTo(dateTime).itemCodeEqualTo(itemCode).count();
 
         if (count > 0) {
           continue;

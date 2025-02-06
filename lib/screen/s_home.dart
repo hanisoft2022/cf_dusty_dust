@@ -27,6 +27,7 @@ class _SHomeState extends State<SHome> {
     super.initState();
 
     StatRepository.fetchData();
+
     _scrollController.addListener(
       () {
         bool isExpanded = _scrollController.offset < (500 - kToolbarHeight);
@@ -49,13 +50,7 @@ class _SHomeState extends State<SHome> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<MStat?>(
-      future: GetIt.I<Isar>()
-          .mStats
-          .filter()
-          .regionEqualTo(region)
-          .itemCodeEqualTo(ItemCode.PM10)
-          .sortByDateTimeDesc()
-          .findFirst(),
+      future: GetIt.I<Isar>().mStats.filter().regionEqualTo(region).itemCodeEqualTo(ItemCode.PM10).sortByDateTimeDesc().findFirst(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Scaffold(
@@ -78,8 +73,7 @@ class _SHomeState extends State<SHome> {
             backgroundColor: darkColor,
             child: ListView(
               children: [
-                const DrawerHeader(
-                    margin: EdgeInsets.zero, child: Text('지역선택', style: TextStyle(color: Colors.white, fontSize: 20))),
+                const DrawerHeader(margin: EdgeInsets.zero, child: Text('지역선택', style: TextStyle(color: Colors.white, fontSize: 20))),
                 ...Region.values.map(
                   (r) => ListTile(
                     title: Text(r.krName),
