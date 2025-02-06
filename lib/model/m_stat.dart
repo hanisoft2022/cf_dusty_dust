@@ -87,8 +87,6 @@ enum ItemCode {
         return '미세먼지';
       case ItemCode.PM25:
         return '초미세먼지';
-      default:
-        throw Exception('존재하지 않는 항목입니다.');
     }
   }
 }
