@@ -21,8 +21,6 @@ class StatusUtils {
             return mStat.stat < e.minO3;
           case ItemCode.SO2:
             return mStat.stat < e.minSO2;
-          default:
-            throw Exception('존재하지 않는 itemCode입니다.');
         }
       },
     );
