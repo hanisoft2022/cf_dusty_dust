@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dusty_dust/model/m_stat.dart';
+import 'package:dusty_dust/provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 
@@ -10,8 +12,9 @@ final List<String> skipKeys = [
 ];
 
 class StatRepository {
-  static Future<void> fetchData() async {
-    final isar = GetIt.I<Isar>();
+  static Future<void> fetchData(WidgetRef ref) async {
+    final isar = ref.watch(isarProvider);
+
     final now = DateTime.now();
     final compareDateTimeTarget = DateTime(now.year, now.month, now.day, now.hour);
 

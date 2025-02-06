@@ -6,18 +6,19 @@ import 'package:dusty_dust/screen/fragment/f_main_status.dart';
 import 'package:dusty_dust/utils/status_utils.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 
-class SHome extends StatefulWidget {
+class SHome extends ConsumerStatefulWidget {
   const SHome({super.key});
 
   @override
-  State<SHome> createState() => _SHomeState();
+  SHomeState createState() => SHomeState();
 }
 
-class _SHomeState extends State<SHome> {
+class SHomeState extends ConsumerState<SHome> {
   Region region = Region.seoul;
   bool isExpanded = true;
   final _scrollController = ScrollController();
@@ -26,7 +27,7 @@ class _SHomeState extends State<SHome> {
   void initState() {
     super.initState();
 
-    StatRepository.fetchData();
+    StatRepository.fetchData(ref);
 
     _scrollController.addListener(
       () {
