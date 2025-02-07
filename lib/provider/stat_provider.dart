@@ -29,3 +29,29 @@ final mStatusProvider = Provider.family<AsyncValue<MStatus?>, Region>((ref, regi
     return StatusUtils.getMStatusFromStat(mStat);
   });
 });
+
+class MStatQueryArgs {
+  final Region region;
+  final ItemCode itemCode;
+  const MStatQueryArgs(this.region, this.itemCode);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || other is MStatQueryArgs && runtimeType == other.runtimeType && region == other.region && itemCode == other.itemCode;
+
+  @override
+  int get hashCode => region.hashCode ^ itemCode.hashCode;
+}
+
+final mStatByItemProvider = FutureProvider.family<MStat?, MStatQueryArgs>((ref, args) async {
+  final isar = ref.read(isarProvider);
+  // 해당 지역(args.region)과 항목(args.itemCode)에 대한 최신 통계 데이터를 조회합니다.
+  final mStat = await isar.mStats.filter().regionEqualTo(args.region).itemCodeEqualTo(args.itemCode).findFirst();
+  return mStat;
+});
+
+final mStatHourlyProvider = FutureProvider.family<List<MStat>, MStatQueryArgs>((ref, args) async {
+  final isar = ref.read(isarProvider);
+  final mStats = await isar.mStats.filter().regionEqualTo(args.region).itemCodeEqualTo(args.itemCode).sortByDateTime().limit(24).findAll();
+  return mStats;
+});

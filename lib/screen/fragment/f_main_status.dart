@@ -1,14 +1,12 @@
 import 'package:dusty_dust/constant/text.dart';
 import 'package:dusty_dust/model/m_stat.dart';
-import 'package:dusty_dust/model/m_status.dart';
+
 import 'package:dusty_dust/provider/stat_provider.dart';
 import 'package:dusty_dust/utils/date_utils.dart';
-import 'package:dusty_dust/utils/status_utils.dart';
+
 import 'package:flutter/material.dart' hide DateUtils;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:get_it/get_it.dart';
-import 'package:isar/isar.dart';
 
 class FMainStat extends ConsumerWidget {
   final Region region;

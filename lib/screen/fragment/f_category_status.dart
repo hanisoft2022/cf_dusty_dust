@@ -1,9 +1,9 @@
 import 'package:dusty_dust/model/m_stat.dart';
+import 'package:dusty_dust/provider/stat_provider.dart';
 import 'package:dusty_dust/utils/status_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:get_it/get_it.dart';
-import 'package:isar/isar.dart';
 
 class FCategoryStat extends StatelessWidget {
   final Color darkColor;
@@ -66,50 +66,58 @@ class _CategoryStatusContent extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)), color: lightColor),
         child: ListView(
-            physics: const PageScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            children: ItemCode.values
-                .map(
-                  (itemCode) => FutureBuilder(
-                    future: GetIt.I<Isar>().mStats.filter().regionEqualTo(region).itemCodeEqualTo(itemCode).findFirst(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-
-                      if (snapshot.hasError) {
-                        return Center(child: Text(snapshot.error.toString()));
-                      }
-
-                      if (!snapshot.hasData) {
-                        return Container();
-                      }
-
-                      final mStat = snapshot.data;
-                      final mStatus = StatusUtils.getMStatusFromStat(mStat!);
-
-                      return Container(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        // parent 위젯인 SHome의 horizontal padding이 10이므로
-                        // (MediaQuery.of(context).size.width - 20)로 설정할 수도 있다.
-                        // 대신, 본 파일의 FCategoryStatus 위젯의 최상위 위젯인 SizedBoxed를 LayoutBuilder로 감싸고,
-                        // LayoutBuilder에서 자동 제공되는 constraint 파라미터를 아래와 같이 사용해도 된다.
-                        width: constraint.maxWidth / 3,
-                        child: Column(
-                          children: [
-                            Text(itemCode.krName),
-                            const Gap(10),
-                            Expanded(child: Image.asset(mStatus.imagePath)),
-                            const Gap(10),
-                            Text(mStat.stat.toString()),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                )
-                .toList()),
+          physics: const PageScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          children: ItemCode.values
+              .map(
+                (itemCode) => _CategoryStatTile(
+                  region: region,
+                  itemCode: itemCode,
+                  width: constraint.maxWidth / 3,
+                ),
+              )
+              .toList(),
+        ),
       ),
+    );
+  }
+}
+
+class _CategoryStatTile extends ConsumerWidget {
+  final Region region;
+  final ItemCode itemCode;
+  final double width;
+
+  const _CategoryStatTile({
+    required this.region,
+    required this.itemCode,
+    required this.width,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mStatAsync = ref.watch(mStatByItemProvider(MStatQueryArgs(region, itemCode)));
+
+    return mStatAsync.when(
+      loading: () => SizedBox(width: width, child: const Center(child: CircularProgressIndicator())),
+      error: (err, st) => SizedBox(width: width, child: Center(child: Text(err.toString()))),
+      data: (mStat) {
+        if (mStat == null) return Container(width: width);
+        final mStatus = StatusUtils.getMStatusFromStat(mStat);
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          width: width,
+          child: Column(
+            children: [
+              Text(itemCode.krName),
+              const Gap(10),
+              Expanded(child: Image.asset(mStatus.imagePath)),
+              const Gap(10),
+              Text(mStat.stat.toString()),
+            ],
+          ),
+        );
+      },
     );
   }
 }
