@@ -11,12 +11,7 @@ class FHourlyStat extends StatelessWidget {
   final Color darkColor;
   final Color lightColor;
 
-  const FHourlyStat({
-    super.key,
-    required this.region,
-    required this.darkColor,
-    required this.lightColor,
-  });
+  const FHourlyStat({super.key, required this.region, required this.darkColor, required this.lightColor});
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +23,7 @@ class FHourlyStat extends StatelessWidget {
         (index) => Column(
           children: [
             FutureBuilder<List<MStat>>(
-              future: GetIt.I<Isar>()
-                  .mStats
-                  .filter()
-                  .regionEqualTo(region)
-                  .itemCodeEqualTo(items[index])
-                  .sortByDateTime()
-                  .limit(24)
-                  .findAll(),
+              future: GetIt.I<Isar>().mStats.filter().regionEqualTo(region).itemCodeEqualTo(items[index]).sortByDateTime().limit(24).findAll(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();

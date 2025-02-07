@@ -12,7 +12,7 @@ final List<String> skipKeys = [
 ];
 
 class StatRepository {
-  static Future<void> fetchData(WidgetRef ref) async {
+  static Future<void> fetchData(Ref ref) async {
     final isar = ref.watch(isarProvider);
 
     final now = DateTime.now();
