@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dusty_dust/model/m_stat.dart';
-import 'package:dusty_dust/provider/provider.dart';
+import 'package:dusty_dust/common/provider/isar_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
@@ -21,6 +21,7 @@ class StatRepository {
     final count = await isar.mStats.filter().dateTimeEqualTo(compareDateTimeTarget).count();
 
     if (count > 0) {
+      // ignore: avoid_print
       print('데이터가 존재합니다 : count: $count');
       return;
     }
